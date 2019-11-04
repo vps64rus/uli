@@ -1,0 +1,20 @@
+echo "Устанавливаем Debian."
+
+# Зеркало в сети
+MIRROR="http://ftp.ru.debian.org/debian"
+
+# Выбор релиза
+VEROS=$(whiptail --title "Release" --radiolist \
+"Выберите релиз ОС Debian." 15 60 5 \
+"wheezy" "Wheezy" OFF \
+"jessie" "Jessie" OFF \
+"stretch" "Stretch" OFF \
+"buster" "Buster" ON \
+"sid" "Sid" OFF 3>&1 1>&2 2>&3)
+exitstatus=$?
+if [ $exitstatus = 0 ]; then
+echo "Выбран релиз:" $VEROS
+else
+echo "Вы отменили установку."
+exit 1
+fi

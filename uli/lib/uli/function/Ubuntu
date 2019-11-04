@@ -1,0 +1,19 @@
+echo "Устанавливаем Ubuntu."
+
+# Зеркало в сети
+MIRROR="http://archive.ubuntu.com/ubuntu"
+
+# Выбор релиза
+VEROS=$(whiptail --title "Release" --radiolist \
+"Выберите релиз ОС Debian." 15 60 5 \
+"trusty" "14.04 LTS" OFF \
+"xenial" "16.04 LTS" OFF \
+"bionic" "18.04 LTS" ON 3>&1 1>&2 2>&3)
+exitstatus=$?
+if [ $exitstatus = 0 ]; then
+echo "Выбран релиз:" $VEROS
+else
+echo "Вы отменили установку."
+exit 1
+fi
+

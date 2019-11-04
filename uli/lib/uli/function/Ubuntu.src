@@ -1,0 +1,23 @@
+# Базовый sources.list
+echo "deb http://us.archive.ubuntu.com/ubuntu/ $VEROS main restricted" > $TARGET/etc/apt/sources.list
+echo "deb-src http://us.archive.ubuntu.com/ubuntu/ $VEROS main restricted" >> $TARGET/etc/apt/sources.list
+echo "deb http://us.archive.ubuntu.com/ubuntu/ $VEROS-updates main restricted" >> $TARGET/etc/apt/sources.list
+echo "deb-src http://us.archive.ubuntu.com/ubuntu/ $VEROS-updates main restricted" >> $TARGET/etc/apt/sources.list
+echo "deb http://us.archive.ubuntu.com/ubuntu/ $VEROS universe" >> $TARGET/etc/apt/sources.list
+echo "deb-src http://us.archive.ubuntu.com/ubuntu/ $VEROS universe" >> $TARGET/etc/apt/sources.list
+echo "deb http://us.archive.ubuntu.com/ubuntu/ $VEROS-updates universe" >> $TARGET/etc/apt/sources.list
+echo "deb-src http://us.archive.ubuntu.com/ubuntu/ $VEROS-updates universe" >> $TARGET/etc/apt/sources.list
+echo "deb http://us.archive.ubuntu.com/ubuntu/ $VEROS multiverse" >> $TARGET/etc/apt/sources.list
+echo "deb-src http://us.archive.ubuntu.com/ubuntu/ $VEROS multiverse" >> $TARGET/etc/apt/sources.list
+echo "deb http://us.archive.ubuntu.com/ubuntu/ $VEROS-updates multiverse" >> $TARGET/etc/apt/sources.list
+echo "deb-src http://us.archive.ubuntu.com/ubuntu/ $VEROS-updates multiverse" >> $TARGET/etc/apt/sources.list
+echo "deb http://us.archive.ubuntu.com/ubuntu/ $VEROS-backports main restricted universe multiverse" >> $TARGET/etc/apt/sources.list
+echo "deb-src http://us.archive.ubuntu.com/ubuntu/ $VEROS-backports main restricted universe multiverse" >> $TARGET/etc/apt/sources.list
+echo "deb http://archive.canonical.com/ubuntu $VEROS partner" >> $TARGET/etc/apt/sources.list
+echo "deb-src http://archive.canonical.com/ubuntu $VEROS partner" >> $TARGET/etc/apt/sources.list
+echo "deb http://security.ubuntu.com/ubuntu $VEROS-security main restricted" >> $TARGET/etc/apt/sources.list
+echo "deb-src http://security.ubuntu.com/ubuntu $VEROS-security main restricted" >> $TARGET/etc/apt/sources.list
+echo "deb http://security.ubuntu.com/ubuntu $VEROS-security universe" >> $TARGET/etc/apt/sources.list
+echo "deb-src http://security.ubuntu.com/ubuntu $VEROS-security universe" >> $TARGET/etc/apt/sources.list
+echo "deb http://security.ubuntu.com/ubuntu $VEROS-security multiverse" >> $TARGET/etc/apt/sources.list
+echo "deb-src http://security.ubuntu.com/ubuntu $VEROS-security multiverse" >> $TARGET/etc/apt/sources.list

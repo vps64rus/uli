@@ -1,0 +1,88 @@
+#!/bin/bash
+
+# Приветствие
+whiptail --title "Welcome to Installer" --msgbox "Универсальный Ubuntu/Debian Linux установщик.\n\
+ВНИМАНИЕ: Диск должен быть заранее размечен и раздел смонтирован." 8 60
+
+# Запрос пути установки
+TARGET=$(whiptail --title "Место установки" --inputbox "Куда ставим? Пример: /media/flash" 10 60 /mnt 3>&1 1>&2 2>&3)
+exitstatus=$?
+if [ $exitstatus = 0 ]; then
+echo "Место установки:" $TARGET
+else
+echo "Вы отменили установку."
+exit 1
+fi
+MOUNTPOINT=$(whiptail --title "Носитель для установки" --inputbox "Куда ставим? Пример:\n\
+UUID=586a666d-6411-48ea-b835-8f08f3f677a3" 10 60 UUID= 3>&1 1>&2 2>&3)
+exitstatus=$?
+if [ $exitstatus = 0 ]; then
+echo "Носитель:" $MOUNTPOINT
+else
+echo "Вы отменили установку."
+exit 1
+fi
+SWAPFILE=$(whiptail --title "Размер SWAP" --inputbox "Пример: 1024" 10 60 1024 3>&1 1>&2 2>&3)
+exitstatus=$?
+if [ $exitstatus = 0 ]; then
+echo "Размер SWAP:" $SWAPFILE
+else
+echo "Вы отменили установку."
+exit 1
+fi
+# Запрос архитектуры
+DEB_ARCH=$(whiptail --title "Выбор архитектуры" --radiolist \
+"Важно понимать, что ОС которую хотите установить должна иметь туже архитектуру, что и та из которой устанавливаете." 15 60 2 \
+"i386" "x86 (i386) 32Bit" ON \
+"amd64" "x64 (amd64) 64Bit" OFF 3>&1 1>&2 2>&3)
+exitstatus=$?
+if [ $exitstatus = 0 ]; then
+echo "Выбрана архитектура:" $DEB_ARCH
+else
+echo "Вы отменили установку."
+exit 1
+fi
+
+# Выбор дистрибутива
+DISTRO=$(whiptail --title "Выбор ОС" --radiolist \
+"Выберите дистрибутив." 15 60 2 \
+"Ubuntu" "Ubuntu" ON \
+"Debian" "Debian" OFF 3>&1 1>&2 2>&3)
+exitstatus=$?
+if [ $exitstatus = 0 ]; then
+echo "Выбран дистрибутив:" $DISTRO
+. /lib/uli/function/$DISTRO
+else
+echo "Вы отменили установку."
+exit 1
+fi
+
+TGT_HOST=$(whiptail --title "Имя машины" --inputbox "Пример: localhost" 10 60 $HOSTNAME 3>&1 1>&2 2>&3)
+exitstatus=$?
+if [ $exitstatus = 0 ]; then
+echo "Имя машины:" $TGT_HOST
+else
+echo "Вы отменили установку."
+exit 1
+fi
+
+
+# Установка базовой системы
+debootstrap --arch $DEB_ARCH $VEROS $TARGET $MIRROR || echo 'debootstrap error.' && exit 1
+whiptail --title ":-)" --msgbox "Базовая система $DISTRO установлена." 8 60
+# Монтирование ФС dev sys proc в новую систему.
+mount -o bind /dev $TARGET/dev
+mount -o bind /sys $TARGET/sys
+mount -o bind /proc $TARGET/proc
+dd if=/dev/zero of=$TARGET/SWAP bs=1M count=$SWAPFILE && mkswap $TARGET/SWAP
+. /lib/uli/function/$DISTRO.src
+echo $TGT_HOST > $TARGET/etc/hostname
+echo "proc            /proc           proc        defaults        0       0" > $TARGET/etc/fstab
+echo "$MOUNTPOINT     /               ext4        defaults        0       1" >> $TARGET/etc/fstab
+echo "/SWAP           none            swap        sw              0       0" >> $TARGET/etc/fstab
+cp /lib/uli/function/$DEB_ARCH.$DISTRO $TARGET/etc/setup.post
+clear
+env LANG=C HOME=/root chroot $TARGET /bin/bash /etc/setup.post
+clear
+echo "Если во время установки произошли ошибки, то используйте команду: env LANG=C HOME=/root chroot $TARGET /bin/bash -i"
+exit 0

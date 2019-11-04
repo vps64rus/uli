@@ -1,0 +1,25 @@
+#!/bin/bash
+apt-get update
+dpkg-reconfigure tzdata
+apt-get -y install sudo popularity-contest
+apt-get -y install locales console-cyrillic
+dpkg-reconfigure locales
+dpkg-reconfigure console-cyrillic
+
+USERNAME=$(whiptail --title "Имя администратора" --inputbox "Пример: admin" 10 60 admin 3>&1 1>&2 2>&3)
+exitstatus=$?
+if [ $exitstatus = 0 ]; then
+echo "Создаем администратора:" $USERNAME
+else
+echo "Вы не выбрали имя администратора, используем по умолчанию: admin."
+USERNAME=admin
+fi
+echo 'Добавление пользователя'
+adduser $USERNAME
+usermod -a -G sudo $USERNAME
+echo 'Установка пароля root'
+passwd
+ARCH=amd64
+## Debian:
+apt-get -y install linux-base linux-image-$ARCH linux-headers-$ARCH grub2
+tasksel
